@@ -32,9 +32,9 @@ class SudokuGrid():
             string = '0' * (size*size)
 
         self.grid_list = self.__unflatten(self.__str2arr(string)) if string else None  
-        if size in standard_regions:
-            self.regions_across = standard_regions[size][0]
-            self.regions_down = standard_regions[size][1]
+        if self.size in standard_regions:
+            self.regions_across = standard_regions[self.size][0]
+            self.regions_down = standard_regions[self.size][1]
         else: # until you tell us differently
             self.regions_across = 3
             self.regions_down = 3
@@ -83,6 +83,39 @@ class SudokuGrid():
 
     def col(self, c: int) -> List[int]:
         return [row[c] for row in self.grid_list]  
+
+    def print_candidate_grid(self):
+        print(str(self))
+        for box_row in range(self.regions_down):
+            self.print_gridlines('=')
+            for cell_row in range(self.box_height):
+                if cell_row != 0:
+                    self.print_gridlines('-')
+                grid_row = box_row*self.box_height + cell_row
+                for candidate_row in range(3):
+                    for box_col in range(self.regions_across):
+                        print("|", end='')
+                        for cell_col in range(self.box_width):
+                            grid_col = box_col*self.box_width + cell_col                                
+                            c = self.candidates[grid_row][grid_col]                                
+                            if cell_col != 0:
+                                print(":", end='')
+                            for candidate_col in range(3):
+                                candidate = candidate_row*3+candidate_col+1
+                                if candidate in c:
+                                    print(str(candidate)+' ', end='')
+                                elif candidate_row==1 and candidate_col==1 and self.grid_list[grid_row][grid_col] != 0:
+                                    print(str(self.grid_list[grid_row][grid_col])+'*' , end='')
+                                else:
+                                    print("  ", end='')
+                    print("|")
+        self.print_gridlines('=')
+
+    def print_gridlines(self,char='-'):
+        for _ in range(self.regions_across):
+            for _ in range(self.box_width):
+                print(f"+{char*6}", end='')
+        print("+")
 
     '''------------------------------- OVERRIDES -------------------------------'''
 

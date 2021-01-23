@@ -23,6 +23,8 @@ class Sudoku():
             if c == "nonconsecutive":
                 self.is_nonconsecutive = True
                 self.erase_all_nonconsecutive()
+        print("starting grid with candidates")
+        self.grid.print_candidate_grid()
 
     def erase_all_nonconsecutive(self):  
         if not self.is_nonconsecutive:
